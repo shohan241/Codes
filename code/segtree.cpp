@@ -1,39 +1,28 @@
 struct segtree {
-    vector<int> tree;
-
-    void init(int n) {
+    vector<ll> tree;
+    void init(ll n) {
         tree.resize(4 * n, 0);
     }
-
-    void update(int id, int low, int high, int x, int val) {
-        if (low == high) {
-            tree[id] += val;
+    void update(ll idx, ll lo, ll hi, ll x, ll val) {
+        if (lo == hi) {
+            tree[idx] += val;
             return;
         }
-
-        int md = (low + high) / 2;
-
+        ll md = (lo + hi) / 2;
         if (x <= md) {
-            update(2 * id, low, md, x, val);
+            update(2 * idx, lo, md, x, val);
         } else {
-            update(2 * id + 1, md + 1, high, x, val);
+            update(2 * idx + 1, md + 1, hi, x, val);
         }
-
-        tree[id] = min(tree[2 * id], tree[2 * id + 1]);
+        tree[idx] = min(tree[2 * idx], tree[2 * idx + 1]);
     }
 
-    int query(int id, int low, int high, int l, int r) {
-        if (l > high or r < low) return INT_MAX;
-
-        if (low >= l and r >= high) {
-            return tree[id];
+    ll query(ll idx, ll lo, ll hi, ll l, ll r) {
+        if (l > hi or r < lo) return LONG_MAX;
+        if (lo >= l and r >= hi) {
+            return tree[idx];
         }
-
-        int md = (low + high) / 2;
-
-        return min(
-                   query(2 * id, low, md, l, r),
-                   query(2 * id + 1, md + 1, high, l, r)
-               );
+        ll md = (lo + hi) / 2;
+        return min(query(2 * idx, lo, md, l, r),query(2 * idx + 1, md + 1, hi, l, r));
     }
 };
